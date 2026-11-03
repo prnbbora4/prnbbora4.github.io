@@ -80,6 +80,8 @@
         padding: 0 24px;
       }
       header.nav {
+        position: relative;
+        z-index: 30;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -122,6 +124,39 @@
         display: flex;
         gap: 16px;
         flex-wrap: wrap;
+      }
+      .burger {
+        display: none;
+        width: 44px;
+        height: 44px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--surface);
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 5px;
+        padding: 0;
+      }
+      .burger span {
+        display: block;
+        width: 20px;
+        height: 2px;
+        background: var(--ink);
+        border-radius: 2px;
+        transition:
+          transform 0.25s,
+          opacity 0.2s;
+      }
+      .burger[aria-expanded="true"] span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+      }
+      .burger[aria-expanded="true"] span:nth-child(2) {
+        opacity: 0;
+      }
+      .burger[aria-expanded="true"] span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
       }
       #theme {
         background: none;
@@ -395,8 +430,47 @@
           padding: 24px;
           gap: 20px;
         }
-        .nav nav a.hide {
+        .burger {
+          display: flex;
+        }
+        .nav nav {
           display: none;
+          position: absolute;
+          top: calc(100% + 4px);
+          left: 0;
+          right: 0;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 2px;
+          background: var(--surface);
+          border: 1px solid var(--line);
+          border-radius: 16px;
+          padding: 10px;
+          box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
+        }
+        .nav nav.open {
+          display: flex;
+        }
+        .nav nav a {
+          padding: 12px 14px;
+          border-radius: 10px;
+          font-size: 1.05rem;
+        }
+        .nav nav a:not(.btn):hover {
+          background: var(--bg);
+        }
+        .nav nav a.btn {
+          text-align: center;
+          margin-top: 6px;
+          padding: 12px;
+        }
+        #theme {
+          margin-top: 6px;
+          padding: 11px 14px;
+        }
+        .actions .btn {
+          width: 100%;
+          text-align: center;
         }
         .seg {
           font-size: 0.75rem;
@@ -420,7 +494,17 @@
     <div class="wrap">
       <header class="nav">
         <a href="#top">Pranab Bora</a>
-        <nav aria-label="Main">
+        <button
+          class="burger"
+          id="burger"
+          type="button"
+          aria-label="Open menu"
+          aria-expanded="false"
+          aria-controls="menu"
+        >
+          <span></span><span></span><span></span>
+        </button>
+        <nav id="menu" aria-label="Main">
           <a class="hide" href="#skills">Skills</a>
           <a class="hide" href="#projects">Projects</a>
           <a class="hide" href="#education">Education</a>
@@ -738,6 +822,30 @@
       if (!matchMedia("(prefers-reduced-motion:reduce)").matches) {
         setTimeout(() => show(chapters.length - 1), 350);
       } else show(chapters.length - 1);
+      // mobile menu
+      const burger = $("burger"),
+        menu = $("menu");
+      function setMenu(o) {
+        menu.classList.toggle("open", o);
+        burger.setAttribute("aria-expanded", o);
+        burger.setAttribute("aria-label", o ? "Close menu" : "Open menu");
+      }
+      burger.onclick = () => setMenu(!menu.classList.contains("open"));
+      menu.addEventListener("click", (e) => {
+        if (e.target.closest("a")) setMenu(false);
+      });
+      addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && menu.classList.contains("open")) {
+          setMenu(false);
+          burger.focus();
+        }
+      });
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest(".nav")) setMenu(false);
+      });
+      matchMedia("(min-width:761px)").addEventListener("change", (e) => {
+        if (e.matches) setMenu(false);
+      });
       // theme toggle
       const root = document.documentElement;
       $("theme").onclick = () => {
