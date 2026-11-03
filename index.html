@@ -101,6 +101,28 @@
       .nav nav a:hover {
         color: var(--ink);
       }
+      a.btn {
+        display: inline-block;
+        background: var(--accent);
+        color: var(--accent-ink) !important;
+        border-radius: 999px;
+        padding: 11px 22px;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      a.btn:hover {
+        filter: brightness(1.1);
+      }
+      .nav a.btn {
+        padding: 6px 14px;
+        font-size: 0.9rem;
+      }
+      .actions {
+        margin-top: 28px;
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
       #theme {
         background: none;
         border: 1px solid var(--line);
@@ -403,6 +425,9 @@
           <a class="hide" href="#projects">Projects</a>
           <a class="hide" href="#education">Education</a>
           <a href="#contact">Contact</a>
+          <a class="btn" href="public/Pranab-Bora-CV.pdf" download
+            >Download CV</a
+          >
           <button id="theme" type="button" aria-label="Toggle dark mode">
             Theme
           </button>
@@ -417,6 +442,11 @@
           TypeScript, Kotlin and Laravel. I like products where video, maps and
           real-time data have to work smoothly on every device.
         </p>
+        <div class="actions">
+          <a class="btn" href="public/Pranab-Bora-CV.pdf" download
+            >Download CV</a
+          >
+        </div>
 
         <div class="player" id="career">
           <div class="screen" aria-live="polite">
